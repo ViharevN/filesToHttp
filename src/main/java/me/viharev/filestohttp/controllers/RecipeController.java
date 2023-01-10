@@ -32,7 +32,7 @@ public class RecipeController {
         this.recipeService = recipeService;
     }
 
-    @PostMapping("/add")
+    @PostMapping()
     @Operation(
             summary = "Добавление рецепта с помощью POST",
             description = "добавляем Рецепт"
@@ -52,7 +52,7 @@ public class RecipeController {
         return recipe;
     }
 
-    @GetMapping("/get/by/{id}")
+    @GetMapping("{id}")
     @Operation(
             summary = "Поиск рецепта",
             description = "Ищем рецепт по его Id"
@@ -70,7 +70,7 @@ public class RecipeController {
         return recipeService.getRecipeById(id);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("{id}")
     @Operation(
             summary = "Изменение рецепта",
             description = "Меняем рецепт по его Id"
@@ -89,7 +89,7 @@ public class RecipeController {
         return ResponseEntity.ok(recipe);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @Operation(
             summary = "Удаление рецепта",
             description = "Удаляем рецепт по его Id"
@@ -104,7 +104,7 @@ public class RecipeController {
         recipeService.deleteRecipeById(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     @Operation(
             summary = "Вывод рецептов",
             description = "Карта всех рецептов"

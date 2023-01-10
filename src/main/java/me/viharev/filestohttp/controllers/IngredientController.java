@@ -26,7 +26,7 @@ public class IngredientController {
         this.ingredientService = ingredientService;
     }
 
-    @PostMapping("/add/ingredient")
+    @PostMapping()
     @Operation(
             summary = "Добавление ингредиента",
             description = "Добавление ингредиента через POST",
@@ -49,7 +49,7 @@ public class IngredientController {
         return ResponseEntity.ok().body(ingredient);
     }
 
-    @GetMapping("/get/by/id")
+    @GetMapping("{id}")
     @Operation(
             summary = "Поиск ингредиента",
             description = "Поиск и вывод ингредиента по его Id"
@@ -63,11 +63,11 @@ public class IngredientController {
                     )
             )
     )
-    public Ingredient getIngredientById(Long id) {
+    public Ingredient getIngredientById(@PathVariable Long id) {
         return ingredientService.getIngredientById(id);
     }
 
-    @PutMapping("/edit/{id}")
+    @PutMapping("{id}")
     @Operation(
             summary = "Изменение ингредиента",
             description = "Поиск и изменение ингредиента по его Id"
@@ -86,7 +86,7 @@ public class IngredientController {
         return ResponseEntity.ok().body(ingredient);
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("{id}")
     @Operation(
             summary = "Удаление ингредиента",
             description = "Поиск и удаление ингредиента по его Id"
@@ -104,7 +104,7 @@ public class IngredientController {
         ingredientService.deleteIngredientById(id);
     }
 
-    @GetMapping("/all")
+    @GetMapping()
     @Operation(
             summary = "Вывод всех ингредиентов",
             description = "Выводим карту всех ингредиентов"

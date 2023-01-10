@@ -1,11 +1,14 @@
 package me.viharev.filestohttp.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import me.viharev.filestohttp.services.FileIngredientService;
 import org.apache.commons.io.IOUtils;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -37,7 +40,7 @@ public class FileIngredientController {
             try {
                 resource = new InputStreamResource(new FileInputStream(file));
             } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             }
             return ResponseEntity.ok()
                     .contentType(MediaType.APPLICATION_JSON)
@@ -55,16 +58,18 @@ public class FileIngredientController {
             summary = "Импорт ингредиентов",
             description = "Импортируем ингредиенты из файла"
     )
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "файл успешно скачался"),
+            @ApiResponse(responseCode = "400", description = "плохой запрос, отправлен некорректный запрос серверу"),
+            @ApiResponse(responseCode = "500", description = "сервер столкнулся с неожиданной ошибкой, которая помешала ему выполнить запрос")})
     public ResponseEntity<Void> uploadDataFile(@RequestParam MultipartFile file) {
         fileIngredientService.cleanToFile();
         File dataFile = fileIngredientService.getDataFile();
         try (FileOutputStream fos = new FileOutputStream(dataFile)) {
             IOUtils.copy(file.getInputStream(), fos);
             return ResponseEntity.ok().build();
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
 }
